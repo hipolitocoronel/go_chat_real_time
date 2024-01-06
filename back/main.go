@@ -10,15 +10,17 @@ import (
 )
 
 func main() {
+	// cargando variables de entorno
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	db, err := database.SetupDB()
+	// realizando conexión a la DB
+	db, err := database.InitMySQL()
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Error al conectar la base de datos: ", err)
 	}
 
 	fmt.Print("Conexión exitosa", db)
