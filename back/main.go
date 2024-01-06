@@ -21,7 +21,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Print(db)
+	fmt.Print("Conexión exitosa", db)
 
 	app := fiber.New()
 
