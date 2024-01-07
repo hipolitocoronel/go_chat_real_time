@@ -1,7 +1,12 @@
 <template>
-  <router-view />
+  <div class="dark">
+    <router-view />
+    <Toaster />
+  </div>
 </template>
 
-<script setup></script>
+<script setup>
+import Toaster from "@/components/ui/toast/Toaster.vue";
+</script>
 
 <style scoped></style>
