@@ -10,7 +10,21 @@
         </CardTitle>
         <CardDescription>Go Real Time Chat</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent class="mt-3">
+        <!-- G00GLE BUTTON -->
+        <Button
+          class="w-full my-3 rounded-lg"
+          variant="outline"
+          @click="logInWithGoogle"
+        >
+          <img src="@/assets/google.png" alt="Google" class="mr-2 w-[8%]" />
+          Continue with Google
+        </Button>
+        <div class="flex w-[42%] items-center">
+          <Separator class="my-4" />
+          <p class="mx-3 text-sm text-muted-foreground">OR</p>
+          <Separator class="my-4" />
+        </div>
         <!-- ---------------- FORMULARIO ------------------ -->
         <form @submit="onSubmit">
           <!-- Username -->
@@ -43,13 +57,37 @@
               <FormMessage />
             </FormItem>
           </FormField>
+          <!-- LOGIN BUTTON-->
           <Button
             type="submit"
             onsubmit="onSubmit"
-            class="w-full bg-gradient-to-r from-blue-400 to-teal-500 text-white py-2 rounded-lg mt-3"
+            class="w-full bg-gradient-to-r from-blue-400 to-teal-500 text-white py-2 rounded-lg my-3"
           >
+            <!-- loader -->
+            <!-- TODO: configure loader -->
+            <Loader2
+              v-if="false"
+              class="animate-spin mr-2"
+              size="20"
+              color="white"
+            />
             Login
           </Button>
+          <!-- Forgot your password? -->
+          <div class="flex justify-center">
+            <Label class="text-sm text-muted-foreground">
+              Forgot your password?
+            </Label>
+          </div>
+          <Separator class="my-4" />
+          <!-- dont have an account? Register -->
+          <div class="flex justify-center">
+            <Label class="text-sm text-muted-foreground">
+              Don't have an account?
+            </Label>
+            <!-- TODO: add router link inside the label to go to "/register" route -->
+            <Label class="text-sm text-blue-400 ml-1">Register</Label>
+          </div>
         </form>
       </CardContent>
     </Card>
@@ -58,6 +96,7 @@
 
 <script setup>
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-vue-next";
 import {
   Card,
   CardContent,
@@ -76,6 +115,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/toast";
+import { Separator } from "@/components/ui/separator";
 
 //FORMULARIO
 import { useForm } from "vee-validate";
