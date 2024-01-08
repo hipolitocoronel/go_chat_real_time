@@ -22,7 +22,7 @@
         </Button>
         <div class="flex w-[42%] items-center">
           <Separator class="my-4" />
-          <p class="mx-3 text-sm text-muted-foreground">OR</p>
+          <p class="mx-3 text-sm text-muted-foreground font-thin">OR</p>
           <Separator class="my-4" />
         </div>
         <!-- ---------------- FORMULARIO ------------------ -->
@@ -33,6 +33,7 @@
               <FormLabel>Username</FormLabel>
               <FormControl>
                 <Input
+                  class="text-xs muted-foreground font-thin"
                   type="text"
                   placeholder="Enter your username"
                   v-bind="componentField"
@@ -48,6 +49,7 @@
               <FormLabel>Password</FormLabel>
               <FormControl>
                 <Input
+                  class="text-xs muted-foreground font-thin"
                   type="password"
                   placeholder="Enter your password"
                   v-bind="componentField"
@@ -75,14 +77,14 @@
           </Button>
           <!-- Forgot your password? -->
           <div class="flex justify-center">
-            <Label class="text-sm text-muted-foreground">
+            <Label class="text-sm text-muted-foreground font-thin">
               Forgot your password?
             </Label>
           </div>
           <Separator class="my-4" />
           <!-- dont have an account? Register -->
           <div class="flex justify-center">
-            <Label class="text-sm text-muted-foreground">
+            <Label class="text-sm text-muted-foreground font-thin">
               Don't have an account?
             </Label>
             <!-- TODO: add router link inside the label to go to "/register" route -->
