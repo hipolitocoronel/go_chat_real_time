@@ -22,7 +22,7 @@
                   type="text"
                   placeholder="Enter your username"
                   v-bind="componentField"
-                  v-model="username"
+                  v-model="formLogin.username"
                 />
               </FormControl>
               <FormMessage />
@@ -37,7 +37,7 @@
                   type="password"
                   placeholder="Enter your password"
                   v-bind="componentField"
-                  v-model="password"
+                  v-model="formLogin.password"
                 />
               </FormControl>
               <FormMessage />
@@ -85,7 +85,7 @@ import * as z from "zod";
 //STORAGE
 import { useLogin } from "@/composables/useLogin";
 
-const { username, password } = useLogin();
+const { formLogin } = useLogin();
 
 const formSchema = toTypedSchema(
   z.object({
@@ -100,8 +100,9 @@ const { handleSubmit } = useForm({
 
 const onSubmit = handleSubmit((values) => {
   //guardo los valores en el storage
-  username.value = values.username;
-  password.value = values.password;
+  formLogin.username = values.username;
+  formLogin.password = values.password;
+
   //alerta
   toast({
     title: "Login Success!",
