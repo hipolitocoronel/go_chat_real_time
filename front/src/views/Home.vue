@@ -22,6 +22,7 @@
                   type="text"
                   placeholder="Enter your username"
                   v-bind="componentField"
+                  v-model="username"
                 />
               </FormControl>
               <FormMessage />
@@ -36,6 +37,7 @@
                   type="password"
                   placeholder="Enter your password"
                   v-bind="componentField"
+                  v-model="password"
                 />
               </FormControl>
               <FormMessage />
@@ -75,9 +77,15 @@ import {
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/toast";
 
+//FORMULARIO
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
+
+//STORAGE
+import { useLogin } from "@/composables/useLogin";
+
+const { username, password } = useLogin();
 
 const formSchema = toTypedSchema(
   z.object({
@@ -91,6 +99,10 @@ const { handleSubmit } = useForm({
 });
 
 const onSubmit = handleSubmit((values) => {
+  //guardo los valores en el storage
+  username.value = values.username;
+  password.value = values.password;
+  //alerta
   toast({
     title: "Login Success!",
     description: JSON.stringify(values, null, 2),
