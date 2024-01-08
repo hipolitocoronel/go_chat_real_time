@@ -4,11 +4,13 @@ import { storeToRefs } from "pinia";
 export const useLogin = () => {
   const loginStore = useLoginStore();
 
-  const { formLogin } = storeToRefs(loginStore);
+  const { formLogin, formRegister } = storeToRefs(loginStore);
 
   return {
     //properties
     formLogin,
+    formRegister,
+
     //methods
   };
 };

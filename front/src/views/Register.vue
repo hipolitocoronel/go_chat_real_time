@@ -6,27 +6,30 @@
       >
         <CardTitle
           class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
-          >Welcome!
+          >Register!
         </CardTitle>
-        <CardDescription>Go Real Time Chat &#x1F4AC; </CardDescription>
+        <CardDescription>
+          Create your account and start chatting 🧑‍💻
+        </CardDescription>
       </CardHeader>
       <CardContent class="mt-3">
-        <!-- G00GLE BUTTON -->
-        <Button
-          class="w-full my-3 rounded-lg"
-          variant="outline"
-          @click="logInWithGoogle"
-        >
-          <img src="@/assets/google.png" alt="Google" class="mr-2 w-[8%]" />
-          Continue with Google
-        </Button>
-        <div class="flex w-[42%] items-center">
-          <Separator class="my-4" />
-          <p class="mx-3 text-sm text-muted-foreground font-thin">OR</p>
-          <Separator class="my-4" />
-        </div>
-        <!-- ---------------- FORMULARIO ------------------ -->
         <form @submit="onSubmit">
+          <!-- Name -->
+          <FormField v-slot="{ componentField }" name="name">
+            <FormItem class="my-8">
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input
+                  class="text-xs muted-foreground font-thin"
+                  type="text"
+                  placeholder="Enter your name"
+                  v-bind="componentField"
+                  v-model="formRegister.name"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
           <!-- Username -->
           <FormField v-slot="{ componentField }" name="username">
             <FormItem class="my-8">
@@ -37,7 +40,23 @@
                   type="text"
                   placeholder="Enter your username"
                   v-bind="componentField"
-                  v-model="formLogin.username"
+                  v-model="formRegister.username"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
+          <!-- Email -->
+          <FormField v-slot="{ componentField }" name="email">
+            <FormItem class="my-8">
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input
+                  class="text-xs muted-foreground font-thin"
+                  type="email"
+                  placeholder="Enter your email"
+                  v-bind="componentField"
+                  v-model="formRegister.email"
                 />
               </FormControl>
               <FormMessage />
@@ -53,13 +72,13 @@
                   type="password"
                   placeholder="Enter your password"
                   v-bind="componentField"
-                  v-model="formLogin.password"
+                  v-model="formRegister.password"
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           </FormField>
-          <!-- LOGIN BUTTON-->
+          <!-- SIGNUP BUTTON-->
           <Button
             type="submit"
             onsubmit="onSubmit"
@@ -73,25 +92,17 @@
               size="20"
               color="white"
             />
-            Log in
+            Sign up
           </Button>
-          <!-- Forgot your password? -->
-          <div class="flex justify-center">
-            <Label class="text-sm text-muted-foreground font-thin">
-              Forgot your password?
-            </Label>
-          </div>
           <Separator class="my-4" />
-          <!-- dont have an account? Register -->
+          <!-- already have an account? Login -->
           <div class="flex justify-center">
             <Label class="text-sm text-muted-foreground font-thin">
-              Don't have an account?
+              Already have an account?
             </Label>
             <!-- TODO: add router link inside the label to go to "/register" route -->
-            <Label
-              class="text-sm text-blue-400 ml-1"
-              @click="$router.push('/register')"
-              >Register</Label
+            <Label class="text-sm text-blue-400 ml-1" @click="$router.push('/')"
+              >Login</Label
             >
           </div>
         </form>
@@ -128,17 +139,16 @@ import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
 
-//INPUT ICONS
-import { Camera } from "lucide-vue-next";
-
 //STORAGE
 import { useLogin } from "@/composables/useLogin";
 
-const { formLogin } = useLogin();
+const { formRegister } = useLogin();
 
 const formSchema = toTypedSchema(
   z.object({
     username: z.string().min(2).max(50),
+    name: z.string().min(2).max(50),
+    email: z.string().email(),
     password: z.string().min(8).max(50),
   })
 );
@@ -149,8 +159,10 @@ const { handleSubmit } = useForm({
 
 const onSubmit = handleSubmit((values) => {
   //guardo los valores en el storage
-  formLogin.username = values.username;
-  formLogin.password = values.password;
+  formRegister.username = values.username;
+  formRegister.name = values.name;
+  formRegister.email = values.email;
+  formRegister.password = values.password;
 
   //alerta
   toast({
