@@ -77,7 +77,10 @@
           </Button>
           <!-- Forgot your password? -->
           <div class="flex justify-center">
-            <Label class="text-sm text-muted-foreground font-thin">
+            <Label
+              class="text-sm text-muted-foreground font-thin"
+              @click="dialogForgotPassword = true"
+            >
               Forgot your password?
             </Label>
           </div>
@@ -97,6 +100,8 @@
         </form>
       </CardContent>
     </Card>
+    <!-- DIALOG FORGOT PASSWORD -->
+    <ForgotPassword v-if="dialogForgotPassword" />
   </div>
 </template>
 
@@ -122,19 +127,30 @@ import {
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/toast";
 import { Separator } from "@/components/ui/separator";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 //FORMULARIO
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
 
-//INPUT ICONS
-import { Camera } from "lucide-vue-next";
-
 //STORAGE
 import { useLogin } from "@/composables/useLogin";
 
-const { formLogin } = useLogin();
+//DIALOG
+import ForgotPassword from "@/components/ForgotPassword.vue";
+
+const { formLogin, dialogForgotPassword } = useLogin();
 
 const formSchema = toTypedSchema(
   z.object({

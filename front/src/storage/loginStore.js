@@ -12,6 +12,12 @@ export const useLoginStore = defineStore("form", {
       email: "",
       password: "",
     },
+
+    formForgotPassword: {
+      email: "",
+    },
+
+    dialogForgotPassword: false,
   }),
   actions: {
     setFormLogin(formLogin) {
