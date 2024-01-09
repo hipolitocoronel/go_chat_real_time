@@ -26,5 +26,8 @@ export const useLoginStore = defineStore("form", {
     setFormRegister(formRegister) {
       this.formRegister = formRegister;
     },
+    setFormForgotPassword(formForgotPassword) {
+      this.formForgotPassword = formForgotPassword;
+    },
   },
 });
