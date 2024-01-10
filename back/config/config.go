@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"go_real_time_chat/config/database"
 	oauth2_conf "go_real_time_chat/config/oauth2"
 	"log"
@@ -33,14 +32,12 @@ func LoadConfig() (*AppConfig, error) {
 		return nil, err
 	}
 
-	fmt.Print("Connection with database successfull")
-
 	// 3. get google auth conf
 	googleConf := oauth2_conf.InitGoogleAuth()
 
 	// return app conf
 	return &AppConfig{
-		DB:         db,
+		DB:         db.DB,
 		GoogleAuth: googleConf,
 	}, nil
 }

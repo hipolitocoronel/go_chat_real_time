@@ -8,7 +8,11 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitMySQL() (*gorm.DB, error) {
+type MySQLClient struct {
+	*gorm.DB
+}
+
+func InitMySQL() (*MySQLClient, error) {
 	// 1. get environment variables
 	DB_USER := os.Getenv("DB_USER")
 	DB_PASSWORD := os.Getenv("DB_PASSWORD")
@@ -26,5 +30,7 @@ func InitMySQL() (*gorm.DB, error) {
 		return nil, err
 	}
 
-	return db, nil
+	fmt.Print("Connection with database successfull")
+
+	return &MySQLClient{db}, nil
 }
