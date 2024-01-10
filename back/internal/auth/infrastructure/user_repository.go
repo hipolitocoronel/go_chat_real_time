@@ -12,3 +12,9 @@ type UserRepository interface {
 type userRepository struct {
 	DB *database.MySQLClient
 }
+
+func NewUserRepository(db *database.MySQLClient) UserRepository {
+	return &userRepository{DB: db}
+}
+
+func (ur *userRepository) FindByEmail(email string) *domain.User
