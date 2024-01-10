@@ -1,29 +1,21 @@
 package main
 
 import (
-	"fmt"
-	"go_real_time_chat/database"
-	"log"
+	"go_real_time_chat/config"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/joho/godotenv"
 )
 
+// type GoogleUserInfo struct {
+// 	Name     string `json:"name"`
+// 	Sub      string `json:"sub"`
+// 	Email    string `json:"email"`
+// 	Verified bool   `json:"email_verified"`
+// 	Picture  string `json:"picture"`
+// }
+
 func main() {
-	// cargando variables de entorno
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	// realizando conexión a la DB
-	db, err := database.InitMySQL()
-
-	if err != nil {
-		log.Fatal("Error al conectar la base de datos: ", err)
-	}
-
-	fmt.Print("Conexión exitosa", db)
+	config.LoadConfig()
 
 	app := fiber.New()
 
