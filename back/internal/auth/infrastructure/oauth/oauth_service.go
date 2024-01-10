@@ -37,7 +37,7 @@ func (s *GoogleOAuthService) GetUserInfo(token *oauth2.Token) (domain.UserGoogle
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(&userInfo); err != nil {
-		return userInfo, errors.New("Error while decoding google user: " + err.Error())
+		return userInfo, errors.New("JSON Parsing Failed: " + err.Error())
 	}
 
 	return userInfo, nil
