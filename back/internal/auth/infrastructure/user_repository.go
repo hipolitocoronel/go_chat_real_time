@@ -17,4 +17,6 @@ func NewUserRepository(db *database.MySQLClient) UserRepository {
 	return &userRepository{DB: db}
 }
 
-func (ur *userRepository) FindByEmail(email string) *domain.User
+func (ur *userRepository) FindByEmail(email string) *domain.User {
+	return &domain.User{}
+}
