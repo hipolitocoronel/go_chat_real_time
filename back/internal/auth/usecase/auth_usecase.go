@@ -3,12 +3,14 @@ package usecase
 import (
 	"go_real_time_chat/internal/auth/domain"
 	"go_real_time_chat/internal/auth/infrastructure"
+	"go_real_time_chat/internal/auth/infrastructure/oauth"
 
 	"golang.org/x/oauth2"
 )
 
 type AuthUseCase struct {
 	UserRepository infrastructure.UserRepository
+	OAuthService   oauth.OAuthService
 }
 
 func NewAuthUseCase(userRepo infrastructure.UserRepository) *AuthUseCase {
@@ -17,4 +19,11 @@ func NewAuthUseCase(userRepo infrastructure.UserRepository) *AuthUseCase {
 
 func (uc *AuthUseCase) AuthenticationLocal(email, password string) (*domain.User, error)
 
-func (uc *AuthUseCase) AuthenticateOAuth(token *oauth2.Token)
+func (uc *AuthUseCase) AuthenticateOAuth(token *oauth2.Token) (string, error) {
+	userInfo, err := uc.OAuthService.GetUserInfo(token)
+
+	if err != nil {
+		return "", err
+	}
+	return userInfo, nil
+}

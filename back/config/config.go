@@ -2,17 +2,15 @@ package config
 
 import (
 	"go_real_time_chat/config/database"
-	oauth2_conf "go_real_time_chat/config/oauth2"
+	"go_real_time_chat/config/oauth"
 	"log"
 
 	"github.com/joho/godotenv"
-	"golang.org/x/oauth2"
-	"gorm.io/gorm"
 )
 
 type AppConfig struct {
-	DB         *gorm.DB
-	GoogleAuth *oauth2.Config
+	DB       *database.MySQLClient
+	AuthConf *oauth.OAuthConf
 }
 
 func LoadConfig() (*AppConfig, error) {
@@ -33,11 +31,11 @@ func LoadConfig() (*AppConfig, error) {
 	}
 
 	// 3. get google auth conf
-	googleConf := oauth2_conf.InitGoogleAuth()
+	authConf := oauth.InitOAuthConf()
 
 	// return app conf
 	return &AppConfig{
-		DB:         db.DB,
-		GoogleAuth: googleConf,
+		DB:       db,
+		AuthConf: authConf,
 	}, nil
 }
