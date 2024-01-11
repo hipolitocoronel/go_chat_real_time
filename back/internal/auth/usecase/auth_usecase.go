@@ -5,6 +5,7 @@ import (
 	"go_real_time_chat/internal/auth/domain"
 	"go_real_time_chat/internal/auth/infrastructure"
 	"go_real_time_chat/internal/auth/infrastructure/oauth"
+	"go_real_time_chat/pkg/dtos/userdtos"
 
 	"golang.org/x/oauth2"
 )
@@ -31,25 +32,34 @@ func (uc *AuthUseCase) AuthenticateOAuth(token *oauth2.Token) (string, error) {
 	return userInfo, nil
 }
 
-func (uc *AuthUseCase) CreateUserService(user *domain.User) (*domain.User, error) {
+func (uc *AuthUseCase) CreateUserService(user *domain.User) (userdtos.UserResponse, error) {
 
+	var userResponse userdtos.UserResponse
 	err := user.Validate()
 
 	if err != nil {
-		return nil, err
+		return userResponse, err
 	}
 
 	//si existe el usuario
 	foundUser, err := uc.UserRepository.FindByEmail(user.Email)
 
 	if err != nil {
-		return nil, err
+		return userResponse, err
 	}
 
 	if foundUser.ID != 0 {
-		return nil, errors.New("user already exists")
+		return userResponse, errors.New("user already exists")
 	}
 
-	return uc.UserRepository.CreateUser(user)
+	newUser, err := uc.UserRepository.CreateUser(user)
+
+	if err != nil {
+		return userResponse, err
+	}
+
+	userResponse.FromEntity(*newUser)
+
+	return userResponse, nil
 
 }
