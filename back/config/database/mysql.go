@@ -22,7 +22,7 @@ func InitMySQL() (*MySQLClient, error) {
 	DB_NAME := os.Getenv("DB_NAME")
 
 	// 2. dsn config
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME)
 
 	// 3. make connection
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})

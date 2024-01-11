@@ -42,19 +42,17 @@ func GoogleCallback(c *fiber.Ctx) error {
 }
 
 func CreateUser(c *fiber.Ctx, userUseCase *usecase.AuthUseCase) error {
-
 	var user domain.User
 
 	if err := c.BodyParser(&user); err != nil {
-		return c.Status(400).JSON(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	createdUser, err := userUseCase.CreateUserService(&user)
 
 	if err != nil {
-		return c.Status(400).JSON(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	return c.JSON(createdUser)
-
 }

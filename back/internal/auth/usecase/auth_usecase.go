@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"errors"
 	"go_real_time_chat/internal/auth/domain"
 	"go_real_time_chat/internal/auth/infrastructure"
 	"go_real_time_chat/internal/auth/infrastructure/oauth"
@@ -12,7 +13,6 @@ type AuthUseCase struct {
 	UserRepository infrastructure.UserRepository
 	OAuthService   oauth.OAuthService
 }
-
 
 func NewAuthUseCase(userRepo infrastructure.UserRepository) *AuthUseCase {
 	return &AuthUseCase{UserRepository: userRepo}
@@ -32,5 +32,38 @@ func (uc *AuthUseCase) AuthenticateOAuth(token *oauth2.Token) (string, error) {
 }
 
 func (uc *AuthUseCase) CreateUserService(user *domain.User) (*domain.User, error) {
+
+	if len(user.Email) == 0 {
+		return nil, errors.New("email is required")
+	}
+
+	if len(user.Password) == 0 {
+		return nil, errors.New("password is required")
+	}
+
+	if len(user.Name) == 0 {
+		return nil, errors.New("name is required")
+	}
+
+	if len(user.Username) == 0 {
+		return nil, errors.New("username is required")
+	}
+
+	if len(user.PhoneNumber) == 0 {
+		return nil, errors.New("phone number is required")
+	}
+
+	//si existe el usuario
+	foundUser, err := uc.UserRepository.FindByEmail(user.Email)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if foundUser.ID != 0 {
+		return nil, errors.New("user already exists")
+	}
+
 	return uc.UserRepository.CreateUser(user)
+
 }
