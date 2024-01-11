@@ -5,6 +5,7 @@ import (
 	"go_real_time_chat/internal/auth/domain"
 	"go_real_time_chat/internal/auth/usecase"
 	"os"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -29,16 +30,28 @@ func GoogleLogin(c *fiber.Ctx, config *config.AppConfig) error {
 	url := config.AuthConf.AuthCodeURL("randomstate")
 
 	c.Status(fiber.StatusSeeOther)
-	c.Redirect(url)
+	// return c.Redirect(url)
 	return c.JSON(url)
 }
 
 func GoogleCallback(c *fiber.Ctx) error {
 	FRONT_URL := os.Getenv("APP_FRONT_URL")
-	code := c.Query("code")
+	code := c.FormValue("code")
 
-	c.Redirect(FRONT_URL)
-	return c.JSON(code)
+	cookie := &fiber.Cookie{
+		Name:     "code",
+		Value:    code,
+		SameSite: "None",
+		Domain:   FRONT_URL,
+		Path:     FRONT_URL,
+		Secure:   true,
+		HTTPOnly: true,
+		Expires:  time.Now().Add(24 * time.Hour),
+	}
+
+	c.Cookie(cookie)
+	c.Context().Redirect(FRONT_URL, 200)
+	return c.JSON(200, "hola")
 }
 
 func CreateUser(c *fiber.Ctx, userUseCase *usecase.AuthUseCase) error {

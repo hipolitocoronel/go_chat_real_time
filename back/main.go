@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 func main() {
@@ -20,6 +21,7 @@ func main() {
 	}
 
 	app := fiber.New()
+	app.Use(cors.New(config.Cors))
 	versionApp := app.Group("/api/v1")
 
 	// auth

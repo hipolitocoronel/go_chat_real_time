@@ -1,6 +1,6 @@
 <template>
   <div class="form-container">
-    <Card class="w-[355px]">
+    <Card class="w-[450px]">
       <CardHeader
         class="flex flex-col items-center justify-center text-center bg-gradient-to-r from-blue-400 to-teal-500 text-white py-8 rounded-t-lg"
       >
@@ -12,14 +12,17 @@
       </CardHeader>
       <CardContent class="mt-3">
         <!-- G00GLE BUTTON -->
+        <!-- <GoogleLogin :callback="callback" prompt> -->
         <Button
           class="w-full my-3 rounded-lg"
           variant="outline"
-          @click="logInWithGoogle"
+          @click="callback"
         >
           <img src="@/assets/google.png" alt="Google" class="mr-2 w-[8%]" />
           Continue with Google
         </Button>
+        <!-- </GoogleLogin> -->
+
         <div class="flex w-[42%] items-center">
           <Separator class="my-4" />
           <p class="mx-3 text-sm text-muted-foreground font-thin">OR</p>
@@ -106,6 +109,7 @@
 </template>
 
 <script setup>
+import { googleAuthCodeLogin } from "vue3-google-login";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-vue-next";
 import {
@@ -175,6 +179,13 @@ const onSubmit = handleSubmit((values) => {
     variant: "destructive",
   });
 });
+
+const callback = (resp) => {
+  googleAuthCodeLogin().then((response) => {
+    console.log("Handle the response", response);
+  });
+  console.log(resp);
+};
 </script>
 
 <style scoped>
