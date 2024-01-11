@@ -10,6 +10,7 @@ import (
 type UserRepository interface {
 	FindByEmail(email string) (*domain.User, error)
 	CreateUser(user *domain.User) (*domain.User, error)
+	GetUsers() ([]domain.User, error)
 }
 
 type userRepository struct {
@@ -34,9 +35,22 @@ func (ur *userRepository) FindByEmail(email string) (*domain.User, error) {
 	return &user, nil
 }
 
+// ----CREAR USUARIO
 func (ur *userRepository) CreateUser(user *domain.User) (*domain.User, error) {
 	if err := ur.DB.Create(user).Error; err != nil {
 		return nil, err
 	}
 	return user, nil
+}
+
+// ----OBETENER USUARIOS
+func (ur *userRepository) GetUsers() ([]domain.User, error) {
+	var users []domain.User
+	result := ur.DB.Find(&users)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return users, nil
 }

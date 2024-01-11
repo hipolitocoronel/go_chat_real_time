@@ -23,6 +23,10 @@ func AuthRoutes(config *config.AppConfig, router fiber.Router, userUseCase *usec
 		return CreateUser(c, userUseCase)
 	})
 
+	router.Get("/users", func(c *fiber.Ctx) error {
+		return GetUsers(c, userUseCase)
+	})
+
 }
 
 func GoogleLogin(c *fiber.Ctx, config *config.AppConfig) error {
@@ -55,4 +59,19 @@ func CreateUser(c *fiber.Ctx, userUseCase *usecase.AuthUseCase) error {
 	}
 
 	return c.JSON(createdUser)
+}
+
+func GetUsers(c *fiber.Ctx, userUseCase *usecase.AuthUseCase) error {
+
+	users, err := userUseCase.GetUsersService()
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.JSON(fiber.Map{
+		"message": "users retrieved successfully",
+		"status":  fiber.StatusOK,
+		"data":    users,
+	})
 }
