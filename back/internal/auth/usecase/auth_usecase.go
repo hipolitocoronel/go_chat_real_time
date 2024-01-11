@@ -33,24 +33,10 @@ func (uc *AuthUseCase) AuthenticateOAuth(token *oauth2.Token) (string, error) {
 
 func (uc *AuthUseCase) CreateUserService(user *domain.User) (*domain.User, error) {
 
-	if len(user.Email) == 0 {
-		return nil, errors.New("email is required")
-	}
+	err := user.Validate()
 
-	if len(user.Password) == 0 {
-		return nil, errors.New("password is required")
-	}
-
-	if len(user.Name) == 0 {
-		return nil, errors.New("name is required")
-	}
-
-	if len(user.Username) == 0 {
-		return nil, errors.New("username is required")
-	}
-
-	if len(user.PhoneNumber) == 0 {
-		return nil, errors.New("phone number is required")
+	if err != nil {
+		return nil, err
 	}
 
 	//si existe el usuario
