@@ -17,7 +17,9 @@ func NewAuthUseCase(userRepo infrastructure.UserRepository) *AuthUseCase {
 	return &AuthUseCase{UserRepository: userRepo}
 }
 
-func (uc *AuthUseCase) AuthenticationLocal(email, password string) (*domain.User, error)
+func (uc *AuthUseCase) AuthenticationLocal(email, password string) (*domain.User, error) {
+	return &domain.User{}, nil
+}
 
 func (uc *AuthUseCase) AuthenticateOAuth(token *oauth2.Token) (string, error) {
 	userInfo, err := uc.OAuthService.GetUserInfo(token)
