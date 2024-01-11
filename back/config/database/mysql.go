@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"go_real_time_chat/internal/auth/domain"
 	"os"
 
 	"gorm.io/driver/mysql"
@@ -31,6 +32,9 @@ func InitMySQL() (*MySQLClient, error) {
 	}
 
 	fmt.Print("Connection with database successfull")
+
+	//crear tablas
+	db.AutoMigrate(&domain.User{})
 
 	return &MySQLClient{db}, nil
 }

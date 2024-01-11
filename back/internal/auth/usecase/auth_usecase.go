@@ -13,6 +13,7 @@ type AuthUseCase struct {
 	OAuthService   oauth.OAuthService
 }
 
+
 func NewAuthUseCase(userRepo infrastructure.UserRepository) *AuthUseCase {
 	return &AuthUseCase{UserRepository: userRepo}
 }
@@ -28,4 +29,8 @@ func (uc *AuthUseCase) AuthenticateOAuth(token *oauth2.Token) (string, error) {
 		return "", err
 	}
 	return userInfo, nil
+}
+
+func (uc *AuthUseCase) CreateUserService(user *domain.User) (*domain.User, error) {
+	return uc.UserRepository.CreateUser(user)
 }

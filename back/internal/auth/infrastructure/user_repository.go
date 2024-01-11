@@ -7,6 +7,7 @@ import (
 
 type UserRepository interface {
 	FindByEmail(email string) *domain.User
+	CreateUser(user *domain.User) (*domain.User, error)
 }
 
 type userRepository struct {
@@ -19,4 +20,12 @@ func NewUserRepository(db *database.MySQLClient) UserRepository {
 
 func (ur *userRepository) FindByEmail(email string) *domain.User {
 	return &domain.User{}
+}
+
+
+func (ur *userRepository) CreateUser(user *domain.User) (*domain.User, error) {
+	if err := ur.DB.Create(user).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
 }
