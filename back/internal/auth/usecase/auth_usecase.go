@@ -63,3 +63,28 @@ func (uc *AuthUseCase) CreateUserService(user *domain.User) (userdtos.UserRespon
 	return userResponse, nil
 
 }
+
+func (uc *AuthUseCase) GetUsersService() ([]userdtos.UserResponse, error) {
+	users := []userdtos.UserResponse{} //arreglo para guardar rta simplificada
+
+	usersEntity, err := uc.UserRepository.GetUsers() //obtener todos los usuarios
+
+	if err != nil {
+		return users, err
+	}
+
+	//si no hay usuarios retornar error
+	if len(usersEntity) == 0 {
+		return users, errors.New("no users found")
+	}
+
+	//por cada usuario, crear una respuesta simplificada
+	for _, user := range usersEntity {
+		var userResponse userdtos.UserResponse
+		userResponse.FromEntity(user)       //respuesta simplificada por cada usuario
+		users = append(users, userResponse) //agregar al array de usuarios
+	}
+
+	return users, nil
+
+}
