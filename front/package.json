@@ -22,10 +22,8 @@
     "tailwindcss-animate": "^1.0.7",
     "vee-validate": "^4.12.4",
     "vue": "^3.3.11",
-    "vue-google-oauth2": "^1.5.10",
     "vue-router": "^4.2.5",
     "vue3-google-login": "^2.0.25",
-    "vue3-google-oauth2": "^1.0.7",
     "zod": "^3.22.4"
   },
   "devDependencies": {

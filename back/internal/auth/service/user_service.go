@@ -1,30 +1,31 @@
-package usecase
+package service
 
 import (
 	"errors"
 	"go_real_time_chat/internal/auth/domain"
 	"go_real_time_chat/internal/auth/infrastructure"
 	"go_real_time_chat/internal/auth/infrastructure/oauth"
+
 	"go_real_time_chat/pkg/dtos/userdtos"
 
 	"golang.org/x/oauth2"
 )
 
-type AuthUseCase struct {
+type UserService struct {
 	UserRepository infrastructure.UserRepository
-	OAuthService   oauth.OAuthService
+	OUserService   oauth.OAuthService
 }
 
-func NewAuthUseCase(userRepo infrastructure.UserRepository) *AuthUseCase {
-	return &AuthUseCase{UserRepository: userRepo}
+func NewUserService(userRepo infrastructure.UserRepository) *UserService {
+	return &UserService{UserRepository: userRepo}
 }
 
-func (uc *AuthUseCase) AuthenticationLocal(email, password string) (*domain.User, error) {
+func (us *UserService) AuthenticationLocal(email, pussword string) (*domain.User, error) {
 	return &domain.User{}, nil
 }
 
-func (uc *AuthUseCase) AuthenticateOAuth(token *oauth2.Token) (string, error) {
-	userInfo, err := uc.OAuthService.GetUserInfo(token)
+func (us *UserService) AuthenticateOAuth(token *oauth2.Token) (string, error) {
+	userInfo, err := us.OUserService.GetUserInfo(token)
 
 	if err != nil {
 		return "", err
@@ -32,7 +33,7 @@ func (uc *AuthUseCase) AuthenticateOAuth(token *oauth2.Token) (string, error) {
 	return userInfo, nil
 }
 
-func (uc *AuthUseCase) CreateUserService(user *domain.User) (userdtos.UserResponse, error) {
+func (us *UserService) CreateUserService(user *domain.User) (userdtos.UserResponse, error) {
 
 	var userResponse userdtos.UserResponse
 	err := user.Validate()
@@ -42,7 +43,7 @@ func (uc *AuthUseCase) CreateUserService(user *domain.User) (userdtos.UserRespon
 	}
 
 	//si existe el usuario
-	foundUser, err := uc.UserRepository.FindByEmail(user.Email)
+	foundUser, err := us.UserRepository.FindByEmail(user.Email)
 
 	if err != nil {
 		return userResponse, err
@@ -52,7 +53,7 @@ func (uc *AuthUseCase) CreateUserService(user *domain.User) (userdtos.UserRespon
 		return userResponse, errors.New("user already exists")
 	}
 
-	newUser, err := uc.UserRepository.CreateUser(user)
+	newUser, err := us.UserRepository.CreateUser(user)
 
 	if err != nil {
 		return userResponse, err
@@ -64,10 +65,10 @@ func (uc *AuthUseCase) CreateUserService(user *domain.User) (userdtos.UserRespon
 
 }
 
-func (uc *AuthUseCase) GetUsersService() ([]userdtos.UserResponse, error) {
+func (us *UserService) GetUsersService() ([]userdtos.UserResponse, error) {
 	users := []userdtos.UserResponse{} //arreglo para guardar rta simplificada
 
-	usersEntity, err := uc.UserRepository.GetUsers() //obtener todos los usuarios
+	usersEntity, err := us.UserRepository.GetUsers() //obtener todos los usuarios
 
 	if err != nil {
 		return users, err

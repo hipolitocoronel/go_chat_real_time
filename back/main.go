@@ -4,11 +4,10 @@ import (
 	"go_real_time_chat/config"
 	"go_real_time_chat/internal/auth/handler"
 	"go_real_time_chat/internal/auth/infrastructure"
-	"go_real_time_chat/internal/auth/usecase"
-	"log"
-	"os"
+	"go_real_time_chat/internal/auth/service"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
@@ -16,7 +15,7 @@ func main() {
 	config, err := config.LoadConfig()
 
 	if err != nil {
-		log.Fatal("")
+		log.Fatal(err.Error())
 		return
 	}
 
@@ -24,12 +23,11 @@ func main() {
 	app.Use(cors.New(config.Cors))
 	versionApp := app.Group("/api/v1")
 
-	// auth
-	authRouter := versionApp.Group("/auth")
+	// user
 	userRepository := infrastructure.NewUserRepository(config.DB)
-	userUseCase := usecase.NewAuthUseCase(userRepository)
+	userService := service.NewUserService(userRepository)
 
-	handler.AuthRoutes(config, authRouter, userUseCase)
+	handler.UserRoutes(config, versionApp, userService)
 
-	app.Listen(":" + os.Getenv("APP_PORT"))
+	app.Listen(config.Port)
 }

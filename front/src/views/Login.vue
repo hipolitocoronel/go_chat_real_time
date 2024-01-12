@@ -16,7 +16,7 @@
         <Button
           class="w-full my-3 rounded-lg"
           variant="outline"
-          @click="callback"
+          @click="loginWithGoogle"
         >
           <img src="@/assets/google.png" alt="Google" class="mr-2 w-[8%]" />
           Continue with Google
@@ -109,21 +109,13 @@
 </template>
 
 <script setup>
-import { googleAuthCodeLogin } from "vue3-google-login";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-vue-next";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -131,17 +123,6 @@ import {
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/toast";
 import { Separator } from "@/components/ui/separator";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 
 //FORMULARIO
 import { useForm } from "vee-validate";
@@ -149,7 +130,7 @@ import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
 
 //STORAGE
-import { useLogin } from "@/composables/useLogin";
+import { useLogin, loginWithGoogle } from "@/composables/useLogin";
 
 //DIALOG
 import ForgotPassword from "@/components/ForgotPassword.vue";
@@ -179,13 +160,6 @@ const onSubmit = handleSubmit((values) => {
     variant: "destructive",
   });
 });
-
-const callback = (resp) => {
-  googleAuthCodeLogin().then((response) => {
-    console.log("Handle the response", response);
-  });
-  console.log(resp);
-};
 </script>
 
 <style scoped>
