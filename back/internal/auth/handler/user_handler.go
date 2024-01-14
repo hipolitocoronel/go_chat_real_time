@@ -17,6 +17,7 @@ func UserRoutes(config *config.AppConfig, router fiber.Router, us *service.UserS
 	//users
 	router.Post("/users", CreateUser(us))
 	router.Get("/users", GetUsers(us))
+	router.Get("/users/:id", GetUserById(us))
 
 }
 
@@ -61,7 +62,13 @@ func CreateUser(us *service.UserService) fiber.Handler {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 		}
 
-		return c.JSON(createdUser)
+		return c.JSON(
+			fiber.Map{
+				"message": "user created successfully",
+				"status":  fiber.StatusOK,
+				"data":    createdUser,
+			},
+		)
 	}
 }
 
@@ -77,6 +84,25 @@ func GetUsers(us *service.UserService) fiber.Handler {
 			"message": "users retrieved successfully",
 			"status":  fiber.StatusOK,
 			"data":    users,
+		})
+	}
+}
+
+func GetUserById(us *service.UserService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+
+		id := c.Params("id") //recupero id de params
+
+		user, err := us.GetUserByIdService(id)
+
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		}
+
+		return c.JSON(fiber.Map{
+			"message": "user retrieved successfully",
+			"status":  fiber.StatusOK,
+			"data":    user,
 		})
 	}
 }

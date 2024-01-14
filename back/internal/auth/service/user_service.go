@@ -119,3 +119,22 @@ func (us *UserService) GetUsersService() ([]userdtos.UserResponse, error) {
 	return users, nil
 
 }
+
+// GET USER BY ID
+func (us *UserService) GetUserByIdService(id string) (userdtos.UserResponse, error) {
+	var userResponse userdtos.UserResponse
+
+	userEntity, err := us.UserRepository.GetUserById(id)
+
+	if err != nil {
+		return userResponse, err
+	}
+
+	if userEntity.ID == 0 {
+		return userResponse, errors.New("user not found")
+	}
+
+	userResponse.FromEntity(*userEntity)
+
+	return userResponse, nil
+}

@@ -11,6 +11,7 @@ type UserRepository interface {
 	FindByEmail(email string) (*domain.User, error)
 	CreateUser(user *domain.User) (*domain.User, error)
 	GetUsers() ([]domain.User, error)
+	GetUserById(id string) (*domain.User, error)
 }
 
 type userRepository struct {
@@ -53,4 +54,16 @@ func (ur *userRepository) GetUsers() ([]domain.User, error) {
 	}
 
 	return users, nil
+}
+
+// ---USUARIO POR ID
+func (ur *userRepository) GetUserById(id int) (*domain.User, error) {
+	var user domain.User
+	result := ur.DB.Where("id = ?", id).First(&user)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &user, nil
 }
