@@ -5,9 +5,11 @@ import (
 	"go_real_time_chat/internal/auth/domain"
 	"go_real_time_chat/internal/auth/infrastructure"
 	"go_real_time_chat/internal/auth/infrastructure/oauth"
+	"log"
 
 	"go_real_time_chat/pkg/dtos/userdtos"
 
+	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/oauth2"
 )
 
@@ -33,6 +35,25 @@ func (us *UserService) AuthenticateOAuth(token *oauth2.Token) (string, error) {
 	return userInfo, nil
 }
 
+// HASH PASSWORD
+func (us *UserService) HashPassword(password string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return string(hash), nil
+
+}
+
+// CHECK HASH PASSWORD
+func (us *UserService) CheckPasswordHash(password, hash string) bool {
+	if err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)); err != nil {
+		return false
+	}
+	return true
+}
+
 func (us *UserService) CreateUserService(user *domain.User) (userdtos.UserResponse, error) {
 
 	var userResponse userdtos.UserResponse
@@ -52,6 +73,15 @@ func (us *UserService) CreateUserService(user *domain.User) (userdtos.UserRespon
 	if foundUser.ID != 0 {
 		return userResponse, errors.New("user already exists")
 	}
+
+	//HASH PASSWORD
+	hash, err := us.HashPassword(user.Password)
+
+	if err != nil {
+		return userResponse, err
+	}
+
+	user.Password = hash
 
 	newUser, err := us.UserRepository.CreateUser(user)
 
