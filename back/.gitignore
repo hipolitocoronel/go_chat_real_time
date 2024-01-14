@@ -1,3 +1,6 @@
-__debug_bin.exe
-back/__debug_bin*
+*.exe
+*.pdb
+*.manifest
+*.cache
+
 .env
