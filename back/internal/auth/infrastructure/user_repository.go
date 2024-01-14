@@ -12,6 +12,7 @@ type UserRepository interface {
 	CreateUser(user *domain.User) (*domain.User, error)
 	GetUsers() ([]domain.User, error)
 	GetUserById(id string) (*domain.User, error)
+	DeleteUserById(id string) error
 }
 
 type userRepository struct {
@@ -22,6 +23,7 @@ func NewUserRepository(db *database.MySQLClient) UserRepository {
 	return &userRepository{DB: db}
 }
 
+// ----get USUARIO POR EMAIL
 func (ur *userRepository) FindByEmail(email string) (*domain.User, error) {
 	var user domain.User
 	result := ur.DB.Where("email = ?", email).First(&user)
@@ -36,7 +38,7 @@ func (ur *userRepository) FindByEmail(email string) (*domain.User, error) {
 	return &user, nil
 }
 
-// ----CREAR USUARIO
+// ----create USUARIO
 func (ur *userRepository) CreateUser(user *domain.User) (*domain.User, error) {
 	if err := ur.DB.Create(user).Error; err != nil {
 		return nil, err
@@ -44,7 +46,7 @@ func (ur *userRepository) CreateUser(user *domain.User) (*domain.User, error) {
 	return user, nil
 }
 
-// ----OBETENER USUARIOS
+// ----get USUARIOS
 func (ur *userRepository) GetUsers() ([]domain.User, error) {
 	var users []domain.User
 	result := ur.DB.Find(&users)
@@ -56,8 +58,8 @@ func (ur *userRepository) GetUsers() ([]domain.User, error) {
 	return users, nil
 }
 
-// ---USUARIO POR ID
-func (ur *userRepository) GetUserById(id int) (*domain.User, error) {
+// ---get USUARIO POR ID
+func (ur *userRepository) GetUserById(id string) (*domain.User, error) {
 	var user domain.User
 	result := ur.DB.Where("id = ?", id).First(&user)
 
@@ -66,4 +68,16 @@ func (ur *userRepository) GetUserById(id int) (*domain.User, error) {
 	}
 
 	return &user, nil
+}
+
+// ---delete USUARIO POR ID
+func (ur *userRepository) DeleteUserById(id string) error {
+	var user domain.User
+	result := ur.DB.Where("id = ?", id).Delete(&user)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
 }

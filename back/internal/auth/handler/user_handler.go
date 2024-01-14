@@ -18,6 +18,7 @@ func UserRoutes(config *config.AppConfig, router fiber.Router, us *service.UserS
 	router.Post("/users", CreateUser(us))
 	router.Get("/users", GetUsers(us))
 	router.Get("/users/:id", GetUserById(us))
+	router.Delete("/users/:id", DeleteUser(us))
 
 }
 
@@ -103,6 +104,23 @@ func GetUserById(us *service.UserService) fiber.Handler {
 			"message": "user retrieved successfully",
 			"status":  fiber.StatusOK,
 			"data":    user,
+		})
+	}
+}
+
+func DeleteUser(us *service.UserService) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		id := c.Params("id")
+
+		err := us.DeleteUserByIdService(id)
+
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		}
+
+		return c.JSON(fiber.Map{
+			"message": "user deleted successfully",
+			"status":  fiber.StatusOK,
 		})
 	}
 }
