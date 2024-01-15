@@ -143,13 +143,13 @@ func (us *UserService) GetUserByIdService(id string) (userdtos.UserResponse, err
 func (us *UserService) DeleteUserByIdService(id string) error {
 
 	//FIND USER BY ID
-	userEntity, err := us.UserRepository.GetUserById(id)
+	user, err := us.UserRepository.GetUserById(id)
 
 	if err != nil {
 		return err
 	}
 
-	if userEntity.ID == 0 {
+	if user.ID == 0 {
 		return errors.New("user not found")
 	}
 
