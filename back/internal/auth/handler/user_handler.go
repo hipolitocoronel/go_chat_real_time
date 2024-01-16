@@ -34,8 +34,20 @@ func Login(us *service.UserService) fiber.Handler {
 			})
 		}
 
-		// case success
-		return nil
+		user, err := us.LoginService(userReq)
+
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		}
+
+		return c.JSON(
+			fiber.Map{
+				"message": "user logged in successfully",
+				"status":  fiber.StatusOK,
+				"data":    user,
+			},
+		)
+
 	}
 }
 

@@ -7,6 +7,7 @@ require (
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	github.com/andybalholm/brotli v1.0.6 // indirect
 	github.com/auth0/go-auth0 v1.4.0 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/gofiber/fiber/v2 v2.52.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect

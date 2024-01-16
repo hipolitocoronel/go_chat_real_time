@@ -35,6 +35,28 @@ func (us *UserService) AuthenticateOAuth(token *oauth2.Token) (string, error) {
 	return userInfo, nil
 }
 
+// loginService
+func (us *UserService) LoginService(userReq userdtos.UserLoginReq) (userdtos.UserResponse, error) {
+
+	var userResponse userdtos.UserResponse
+
+	//check password
+	user, err := us.UserRepository.FindByEmail(userReq.Email)
+
+	if err != nil {
+		return userResponse, err
+	}
+
+	//si la contraseña no coincide
+	if !us.CheckPasswordHash(userReq.Password, user.Password) {
+		return userResponse, errors.New("invalid credentials")
+	}
+
+	userResponse.FromEntity(*user)
+
+	return userResponse, nil
+}
+
 // HASH PASSWORD
 func (us *UserService) HashPassword(password string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
