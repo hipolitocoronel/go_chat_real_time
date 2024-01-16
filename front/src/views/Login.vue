@@ -130,12 +130,12 @@ import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
 
 //STORAGE
-import { useLogin, loginWithGoogle } from "@/composables/useLogin";
+import { useLogin } from "@/composables/useLogin";
 
 //DIALOG
 import ForgotPassword from "@/components/ForgotPassword.vue";
 
-const { formLogin, dialogForgotPassword } = useLogin();
+const { formLogin, dialogForgotPassword, loginWithGoogle } = useLogin();
 
 const formSchema = toTypedSchema(
   z.object({
