@@ -6,9 +6,11 @@ import (
 	"go_real_time_chat/internal/auth/infrastructure"
 	"go_real_time_chat/internal/auth/infrastructure/oauth"
 	"log"
+	"time"
 
 	"go_real_time_chat/pkg/dtos/userdtos"
 
+	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/oauth2"
 )
@@ -36,9 +38,9 @@ func (us *UserService) AuthenticateOAuth(token *oauth2.Token) (string, error) {
 }
 
 // loginService
-func (us *UserService) LoginService(userReq userdtos.UserLoginReq) (userdtos.UserResponse, error) {
+func (us *UserService) LoginService(userReq userdtos.UserLoginReq) (userdtos.UserLoginRes, error) {
 
-	var userResponse userdtos.UserResponse
+	var userResponse userdtos.UserLoginRes
 
 	//check password
 	user, err := us.UserRepository.FindByEmail(userReq.Email)
@@ -52,7 +54,37 @@ func (us *UserService) LoginService(userReq userdtos.UserLoginReq) (userdtos.Use
 		return userResponse, errors.New("invalid credentials")
 	}
 
-	userResponse.FromEntity(*user)
+	//---------JWT----------------
+
+	var jwtKey = []byte("secret_key")
+
+	type Claims struct {
+		ID       uint   `json:"id"`
+		Email    string `json:"email"`
+		Username string `json:"username"`
+		jwt.StandardClaims
+	}
+
+	expirationTime := time.Now().Add(time.Minute * 5)
+
+	claims := &Claims{
+		ID:       user.ID,
+		Email:    user.Email,
+		Username: user.Username,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expirationTime.Unix(),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	tokenString, err := token.SignedString(jwtKey)
+
+	if err != nil {
+		return userResponse, err
+	}
+
+	userResponse.Token = tokenString
 
 	return userResponse, nil
 }

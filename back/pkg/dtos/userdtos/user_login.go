@@ -6,7 +6,5 @@ type UserLoginReq struct {
 }
 
 type UserLoginRes struct {
-	ID    string `json:"id"`
 	Token string `json:"token"`
-	Email string `json:"email"`
 }
